@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ProductList.css';
 import CartItem from './CartItem';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from './CartSlice';
 
 function ProductList({ onHomeClick }) {
@@ -10,6 +10,7 @@ function ProductList({ onHomeClick }) {
     const [addedToCart, setAddedToCart] = useState({});
 
     const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.items);
 
     const plantsArray = [
         {
@@ -190,6 +191,12 @@ function ProductList({ onHomeClick }) {
         }));
     };
 
+    const calculateTotalQuantity = () => {
+        return cartItems
+            ? cartItems.reduce((total, item) => total + item.quantity, 0)
+            : 0;
+    };
+
     return (
         <div>
             <div className="navbar" style={styleObj}>
@@ -214,9 +221,10 @@ function ProductList({ onHomeClick }) {
                     </div>
 
                     <div>
-                        <a href="#" onClick={handleCartClick} style={styleA}>
+                        <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
                             <h1 className="cart">
                                 🛒
+                                <span className="cart-count">{calculateTotalQuantity()}</span>
                             </h1>
                         </a>
                     </div>
